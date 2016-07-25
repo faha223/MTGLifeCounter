@@ -10,6 +10,8 @@ using MTGLifeCounter.AnimationHelpers;
 using Android.Views.Animations;
 using System.Timers;
 using Android.Content.PM;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MTGLifeCounter
 {
@@ -206,6 +208,44 @@ namespace MTGLifeCounter
 
         #endregion Dice View
 
+        #region Select Background View
+
+        private bool _showPlayerSelectBackgroundView;
+        public bool ShowPlayerSelectBackgroundView
+        {
+            get
+            {
+                return _showPlayerSelectBackgroundView;
+            }
+            set
+            {
+                if (_showPlayerSelectBackgroundView != value)
+                {
+                    _showPlayerSelectBackgroundView = value;
+                    OnPropertyChanged("ShowPlayerSelectBackgroundView");
+                }
+            }
+        }
+
+        private bool _showOpponentSelectBackgroundView;
+        public bool ShowOpponentSelectBackgroundView
+        {
+            get
+            {
+                return _showOpponentSelectBackgroundView;
+            }
+            set
+            {
+                if (_showOpponentSelectBackgroundView != value)
+                {
+                    _showOpponentSelectBackgroundView = value;
+                    OnPropertyChanged("ShowOpponentSelectBackgroundView");
+                }
+            }
+        }
+
+        #endregion Select Background View
+
         private bool showMenu;
         public bool ShowMenu
         {
@@ -223,12 +263,39 @@ namespace MTGLifeCounter
             }
         }
 
+        private bool showLifeMenu;
+        public bool ShowLifeMenu
+        {
+            get
+            {
+                return showLifeMenu;
+            }
+            set
+            {
+                if (showLifeMenu != value)
+                {
+                    showLifeMenu = value;
+                    OnPropertyChanged("ShowLifeMenu");
+                }
+            }
+        }
+
         private Animation ResetHealthAnimation
         {
             get
             {
-                var anim = new ShakeAnimation(64.0f);
+                var anim = new ShakeAnimation(64.0f, 9);
                 anim.Duration = 300;
+                return anim;
+            }
+        }
+
+        private Animation DieChangeAnimation
+        {
+            get
+            {
+                var anim = new ShakeAnimation(16.0f, 1);
+                anim.Duration = 125;
                 return anim;
             }
         }
@@ -254,13 +321,15 @@ namespace MTGLifeCounter
             SetContentView(Resource.Layout.Main);
 
             // Hook up the commands to the buttons
-            FindViewById<Button>(Resource.Id.mv_OpponentIncreaseHealth).Click += IncreaseOpponentHealthCommand;
-            FindViewById<Button>(Resource.Id.mv_OpponentDecreaseHealth).Click += DecreaseOpponentHealthCommand;
-            FindViewById<Button>(Resource.Id.mv_PlayerIncreaseHealth).Click += IncreasePlayerHealthCommand;
-            FindViewById<Button>(Resource.Id.mv_PlayerDecreaseHealth).Click += DecreasePlayerHealthCommand;
+            FindViewById<ImageButton>(Resource.Id.mv_OpponentIncreaseHealth).Click += IncreaseOpponentHealthCommand;
+            FindViewById<ImageButton>(Resource.Id.mv_OpponentDecreaseHealth).Click += DecreaseOpponentHealthCommand;
+            FindViewById<ImageButton>(Resource.Id.mv_PlayerIncreaseHealth).Click += IncreasePlayerHealthCommand;
+            FindViewById<ImageButton>(Resource.Id.mv_PlayerDecreaseHealth).Click += DecreasePlayerHealthCommand;
+            FindViewById<Button>(Resource.Id.mv_PlayerToggleSelectBg).Click += TogglePlayerSelectBgCommand;
+            FindViewById<Button>(Resource.Id.mv_OpponentToggleSelectBg).Click += ToggleOpponentSelectBgCommand;
 
             // Menu Open/Close
-            FindViewById<Button>(Resource.Id.mv_menuToggle).Click += ToggleMenuCommand;
+            FindViewById<ImageButton>(Resource.Id.mv_menuToggle).Click += ToggleMenuCommand;
             FindViewById<Button>(Resource.Id.mv_menuClose).Click += CloseMenuCommand;
             
             // Menu Buttons
@@ -269,12 +338,31 @@ namespace MTGLifeCounter
             FindViewById<Button>(Resource.Id.mv_menu_life).Click += LifeCommand;
             FindViewById<Button>(Resource.Id.mv_menu_settings).Click += SettingsCommand;
 
+            // Life Menu Buttons
+            FindViewById<Button>(Resource.Id.mv_setLife20).Click += SetLife20Command;
+            FindViewById<Button>(Resource.Id.mv_setLife30).Click += SetLife30Command;
+            FindViewById<Button>(Resource.Id.mv_setLife40).Click += SetLife40Command;
+
+            // SelectBgButtons
+            FindViewById<ImageButton>(Resource.Id.mv_PlayerSelectBgFst).Click += SetPlayerBgForest;
+            FindViewById<ImageButton>(Resource.Id.mv_PlayerSelectBgPln).Click += SetPlayerBgPlains;
+            FindViewById<ImageButton>(Resource.Id.mv_PlayerSelectBgMtn).Click += SetPlayerBgMountain;
+            FindViewById<ImageButton>(Resource.Id.mv_PlayerSelectBgSmp).Click += SetPlayerBgSwamp;
+            FindViewById<ImageButton>(Resource.Id.mv_PlayerSelectBgWtr).Click += SetPlayerBgWater;
+            FindViewById<ImageButton>(Resource.Id.mv_OpponentSelectBgFst).Click += SetOpponentBgForest;
+            FindViewById<ImageButton>(Resource.Id.mv_OpponentSelectBgPln).Click += SetOpponentBgPlains;
+            FindViewById<ImageButton>(Resource.Id.mv_OpponentSelectBgMtn).Click += SetOpponentBgMountain;
+            FindViewById<ImageButton>(Resource.Id.mv_OpponentSelectBgSmp).Click += SetOpponentBgSwamp;
+            FindViewById<ImageButton>(Resource.Id.mv_OpponentSelectBgWtr).Click += SetOpponentBgWater;
+
             // Hide nav buttons
             FindViewById(Resource.Id.mv_LayoutRoot).SystemUiVisibility = StatusBarVisibility.Hidden;
 
             PlayerBackground = Resource.Drawable.plainsBg;
             OpponentBackground = Resource.Drawable.swampBg;
         }
+
+        #region Main View Commands
 
         private void IncreaseOpponentHealthCommand(object sender, EventArgs args)
         {
@@ -293,13 +381,19 @@ namespace MTGLifeCounter
             PlayerHealth--;
         }
 
+        #endregion Main View Commands
+
+        #region Menu Commands
+
         private void ToggleMenuCommand(object sender, EventArgs args)
         {
             ShowMenu = !ShowMenu;
         }
+
         private void CloseMenuCommand(object sender, EventArgs args)
         {
             ShowMenu = false;
+            ShowLifeMenu = false;
         }
 
         private void ResetCommand(object sender, EventArgs args)
@@ -310,15 +404,6 @@ namespace MTGLifeCounter
             {
                 FindViewById(Resource.Id.mv_PlayerHealth).StartAnimation(ResetHealthAnimation);
                 FindViewById(Resource.Id.mv_OpponentHealth).StartAnimation(ResetHealthAnimation);
-                var timer = new Timer();
-                timer.Interval = 500;
-                timer.Elapsed += delegate
-                {
-                    timer.Stop();
-                    ShowMenu = false;
-                    timer.Dispose();
-                };
-                timer.Start();
             });
         }
 
@@ -384,28 +469,104 @@ namespace MTGLifeCounter
 
         private void LifeCommand(object sender, EventArgs args)
         {
-
-        }
-        private void SetLife20Command(object sender, EventArgs args)
-        {
-            BaseHealth = 20;
-            ResetCommand(sender, args);
-        }
-        private void SetLife30Command(object sender, EventArgs args)
-        {
-            BaseHealth = 30;
-            ResetCommand(sender, args);
-        }
-        private void SetLife40Command(object sender, EventArgs args)
-        {
-            BaseHealth = 40;
-            ResetCommand(sender, args);
+            ShowLifeMenu = true;
         }
 
         private void SettingsCommand(object sender, EventArgs args)
         {
 
         }
+
+        #endregion Menu Commands
+
+        #region Life Menu Commands
+
+        private void SetLife20Command(object sender, EventArgs args)
+        {
+            BaseHealth = 20;
+            ShowLifeMenu = false;
+            ResetCommand(sender, args);
+        }
+
+        private void SetLife30Command(object sender, EventArgs args)
+        {
+            BaseHealth = 30;
+            ShowLifeMenu = false;
+            ResetCommand(sender, args);
+        }
+
+        private void SetLife40Command(object sender, EventArgs args)
+        {
+            BaseHealth = 40;
+            ShowLifeMenu = false;
+            ResetCommand(sender, args);
+        }
+
+        #endregion Life Menu Commands
+
+        #region Select Background Commands
+
+        void TogglePlayerSelectBgCommand(object sender, EventArgs args)
+        {
+            ShowPlayerSelectBackgroundView = !ShowPlayerSelectBackgroundView;
+        }
+
+        void ToggleOpponentSelectBgCommand(object sender, EventArgs args)
+        {
+            ShowOpponentSelectBackgroundView = !ShowOpponentSelectBackgroundView;
+        }
+
+        void SetPlayerBgForest(object sender, EventArgs args)
+        {
+            PlayerBackground = Resource.Drawable.forestBg;
+        }
+
+        void SetPlayerBgMountain(object sender, EventArgs args)
+        {
+            PlayerBackground = Resource.Drawable.mountainBg;
+        }
+
+        void SetPlayerBgWater(object sender, EventArgs args)
+        {
+            PlayerBackground = Resource.Drawable.waterBg;
+        }
+
+        void SetPlayerBgPlains(object sender, EventArgs args)
+        {
+            PlayerBackground = Resource.Drawable.plainsBg;
+        }
+
+        void SetPlayerBgSwamp(object sender, EventArgs args)
+        {
+            PlayerBackground = Resource.Drawable.swampBg;
+        }
+
+        void SetOpponentBgForest(object sender, EventArgs args)
+        {
+            OpponentBackground = Resource.Drawable.forestBg;
+        }
+
+        void SetOpponentBgMountain(object sender, EventArgs args)
+        {
+            OpponentBackground = Resource.Drawable.mountainBg;
+        }
+
+        void SetOpponentBgWater(object sender, EventArgs args)
+        {
+            OpponentBackground = Resource.Drawable.waterBg;
+        }
+
+        void SetOpponentBgPlains(object sender, EventArgs args)
+        {
+            OpponentBackground = Resource.Drawable.plainsBg;
+        }
+
+        void SetOpponentBgSwamp(object sender, EventArgs args)
+        {
+            OpponentBackground = Resource.Drawable.swampBg;
+        }
+
+        #endregion
 
         private void OnPropertyChanged(string property)
         {
@@ -433,6 +594,26 @@ namespace MTGLifeCounter
                             menu.StartAnimation(OpenMenuAnimation);
                     });
                     break;
+                case "ShowLifeMenu":
+                    RunOnUiThread(() =>
+                    {
+                        if (ShowLifeMenu)
+                        {
+                            FindViewById(Resource.Id.mv_lifeMenu).Visibility = ViewStates.Visible;
+                            FindViewById(Resource.Id.mv_menu).Visibility = ViewStates.Gone;
+                        }
+                        else if (ShowMenu)
+                        {
+                            FindViewById(Resource.Id.mv_lifeMenu).Visibility = ViewStates.Gone;
+                            FindViewById(Resource.Id.mv_menu).Visibility = ViewStates.Visible;
+                        }
+                        else
+                        {
+                            FindViewById(Resource.Id.mv_lifeMenu).Visibility = ViewStates.Gone;
+                            FindViewById(Resource.Id.mv_menu).Visibility = ViewStates.Gone;
+                        }
+                    });
+                    break;
                 case "ShowDice":
                     RunOnUiThread(() =>
                     {
@@ -447,28 +628,30 @@ namespace MTGLifeCounter
                     RunOnUiThread(() =>
                     {
                         SetDieImage(Resource.Id.mv_PlayerDiceValue, PlayerDie, PlayerDarkMode);
+                        FindViewById(Resource.Id.mv_PlayerDiceValue).StartAnimation(DieChangeAnimation);
                     });
                     break;
                 case "OpponentDie":
                     RunOnUiThread(() =>
                     {
                         SetDieImage(Resource.Id.mv_OpponentDiceValue, OpponentDie, OpponentDarkMode);
+                        FindViewById(Resource.Id.mv_OpponentDiceValue).StartAnimation(DieChangeAnimation);
                     });
                     break;
                 case "PlayerDarkMode":
                     RunOnUiThread(() =>
                     {
                         SetDieImage(Resource.Id.mv_PlayerDiceValue, PlayerDie, PlayerDarkMode);
-                        FindViewById<Button>(Resource.Id.mv_PlayerDecreaseHealth).SetCompoundDrawables(GetDrawable(PlayerDarkMode ? Resource.Drawable.MinusButtonDark : Resource.Drawable.MinusButtonLight), null, null, null);
-                        FindViewById<Button>(Resource.Id.mv_PlayerIncreaseHealth).SetCompoundDrawables(null, null, GetDrawable(PlayerDarkMode ? Resource.Drawable.PlusButtonDark : Resource.Drawable.PlusButtonLight), null);
+                        FindViewById<ImageButton>(Resource.Id.mv_PlayerDecreaseHealth).SetImageResource(PlayerDarkMode ? Resource.Drawable.MinusButtonDark : Resource.Drawable.MinusButtonLight);
+                        FindViewById<ImageButton>(Resource.Id.mv_PlayerIncreaseHealth).SetImageResource(PlayerDarkMode ? Resource.Drawable.PlusButtonDark : Resource.Drawable.PlusButtonLight);
                     });
                     break;
                 case "OpponentDarkMode":
                     RunOnUiThread(() =>
                     {
                         SetDieImage(Resource.Id.mv_OpponentDiceValue, OpponentDie, OpponentDarkMode);
-                        FindViewById<Button>(Resource.Id.mv_OpponentDecreaseHealth).SetCompoundDrawables(GetDrawable(OpponentDarkMode ? Resource.Drawable.MinusButtonDark : Resource.Drawable.MinusButtonLight), null, null, null);
-                        FindViewById<Button>(Resource.Id.mv_OpponentIncreaseHealth).SetCompoundDrawables(null, null, GetDrawable(OpponentDarkMode ? Resource.Drawable.PlusButtonDark : Resource.Drawable.PlusButtonLight), null);
+                        FindViewById<ImageButton>(Resource.Id.mv_OpponentDecreaseHealth).SetImageResource(OpponentDarkMode ? Resource.Drawable.MinusButtonDark : Resource.Drawable.MinusButtonLight);
+                        FindViewById<ImageButton>(Resource.Id.mv_OpponentIncreaseHealth).SetImageResource(OpponentDarkMode ? Resource.Drawable.PlusButtonDark : Resource.Drawable.PlusButtonLight);
                     });
                     break;
                 case "DiceRollWinner":
@@ -493,12 +676,102 @@ namespace MTGLifeCounter
                     RunOnUiThread(() =>
                     {
                         FindViewById(Resource.Id.mv_PlayerLayout).SetBackgroundResource(PlayerBackground);
+                        FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgSmp).SetImageResource(Resource.Drawable.swampManaUnselected);
+                        FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgWtr).SetImageResource(Resource.Drawable.waterManaUnselected);
+                        FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgPln).SetImageResource(Resource.Drawable.plainsManaUnselected);
+                        FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgFst).SetImageResource(Resource.Drawable.forestManaUnselected);
+                        FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgMtn).SetImageResource(Resource.Drawable.mountainManaUnselected);
+                        switch (PlayerBackground)
+                        {
+                            case Resource.Drawable.swampBg:
+                                FindViewById<ImageButton>(Resource.Id.mv_PlayerSelectBgSmp).SetImageResource(Resource.Drawable.swampMana);
+                                break;
+                            case Resource.Drawable.waterBg:
+                                FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgWtr).SetImageResource(Resource.Drawable.waterMana);
+                                break;
+                            case Resource.Drawable.mountainBg:
+                                FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgMtn).SetImageResource(Resource.Drawable.mountainMana);
+                                break;
+                            case Resource.Drawable.plainsBg:
+                                FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgPln).SetImageResource(Resource.Drawable.plainsMana);
+                                break;
+                            case Resource.Drawable.forestBg:
+                                FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgFst).SetImageResource(Resource.Drawable.forestMana);
+                                break;
+                        }
                     });
                     break;
                 case "OpponentBackground":
                     RunOnUiThread(() =>
                     {
                         FindViewById(Resource.Id.mv_OpponentLayout).SetBackgroundResource(OpponentBackground);
+                        FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgSmp).SetImageResource(Resource.Drawable.swampManaUnselected);
+                        FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgWtr).SetImageResource(Resource.Drawable.waterManaUnselected);
+                        FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgPln).SetImageResource(Resource.Drawable.plainsManaUnselected);
+                        FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgFst).SetImageResource(Resource.Drawable.forestManaUnselected);
+                        FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgMtn).SetImageResource(Resource.Drawable.mountainManaUnselected);
+                        switch (OpponentBackground)
+                        {
+                            case Resource.Drawable.swampBg:
+                                FindViewById<ImageButton>(Resource.Id.mv_OpponentSelectBgSmp).SetImageResource(Resource.Drawable.swampMana);
+                                break;
+                            case Resource.Drawable.waterBg:
+                                FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgWtr).SetImageResource(Resource.Drawable.waterMana);
+                                break;
+                            case Resource.Drawable.mountainBg:
+                                FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgMtn).SetImageResource(Resource.Drawable.mountainMana);
+                                break;
+                            case Resource.Drawable.plainsBg:
+                                FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgPln).SetImageResource(Resource.Drawable.plainsMana);
+                                break;
+                            case Resource.Drawable.forestBg:
+                                FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgFst).SetImageResource(Resource.Drawable.forestMana);
+                                break;
+                        }
+                    });
+                    break;
+                case "ShowPlayerSelectBackgroundView":
+                    RunOnUiThread(() =>
+                    {
+                        if (ShowPlayerSelectBackgroundView)
+                        {
+                            FindViewById(Resource.Id.mv_PlayerMainView).Visibility = ViewStates.Gone;
+                            FindViewById(Resource.Id.mv_PlayerDiceView).Visibility = ViewStates.Gone;
+                            FindViewById(Resource.Id.mv_PlayerSelectBgView).Visibility = ViewStates.Visible;
+                        } else if(ShowDice)
+                        {
+                            FindViewById(Resource.Id.mv_PlayerMainView).Visibility = ViewStates.Gone;
+                            FindViewById(Resource.Id.mv_PlayerDiceView).Visibility = ViewStates.Visible;
+                            FindViewById(Resource.Id.mv_PlayerSelectBgView).Visibility = ViewStates.Gone;
+                        } else
+                        {
+                            FindViewById(Resource.Id.mv_PlayerMainView).Visibility = ViewStates.Visible;
+                            FindViewById(Resource.Id.mv_PlayerDiceView).Visibility = ViewStates.Gone;
+                            FindViewById(Resource.Id.mv_PlayerSelectBgView).Visibility = ViewStates.Gone;
+                        }
+                    });
+                    break;
+                case "ShowOpponentSelectBackgroundView":
+                    RunOnUiThread(() =>
+                    {
+                        if (ShowOpponentSelectBackgroundView)
+                        {
+                            FindViewById(Resource.Id.mv_OpponentMainView).Visibility = ViewStates.Gone;
+                            FindViewById(Resource.Id.mv_OpponentDiceView).Visibility = ViewStates.Gone;
+                            FindViewById(Resource.Id.mv_OpponentSelectBgView).Visibility = ViewStates.Visible;
+                        }
+                        else if (ShowDice)
+                        {
+                            FindViewById(Resource.Id.mv_OpponentMainView).Visibility = ViewStates.Gone;
+                            FindViewById(Resource.Id.mv_OpponentDiceView).Visibility = ViewStates.Visible;
+                            FindViewById(Resource.Id.mv_OpponentSelectBgView).Visibility = ViewStates.Gone;
+                        }
+                        else
+                        {
+                            FindViewById(Resource.Id.mv_OpponentMainView).Visibility = ViewStates.Visible;
+                            FindViewById(Resource.Id.mv_OpponentDiceView).Visibility = ViewStates.Gone;
+                            FindViewById(Resource.Id.mv_OpponentSelectBgView).Visibility = ViewStates.Gone;
+                        }
                     });
                     break;
                  default:
@@ -506,6 +779,8 @@ namespace MTGLifeCounter
                     break;
             }
         }
+
+        #region View Management
 
         private void SetDieImage(int viewId, int value, bool darkMode)
         {
@@ -523,17 +798,27 @@ namespace MTGLifeCounter
         private void RollDice()
         {
             uint val = (uint)Math.Abs(Rand.Next());
-            int pdie = 1;
-            int odie = 1;
+            int pdie = 0;
+            int odie = 0;
 
-            for (uint i = 0; i < 5; i++)
+            for (uint i = 0; i < 4; i++)
             {
                 if ((val & i) != 0) pdie++;
                 if ((val & (i * 65536)) != 0) odie++;
             }
 
-            PlayerDie = pdie;
-            OpponentDie = odie;
+            PlayerDie = nextDieValue(PlayerDie, pdie);
+            OpponentDie = nextDieValue(OpponentDie, odie);
+        }
+
+        private int nextDieValue(int currentDieValue, int randMod4)
+        {
+            // Each die face is opposite the face that when added together equals 7
+            // ex: 1 opposite 6, 2 opposite 5, 3 opposite 4
+            int[] allValues = new int[] { 1, 2, 3, 4, 5, 6 };
+            int[] possibleValues = allValues.Except(new int[] { currentDieValue, 7 - currentDieValue }).ToArray();
+            
+            return possibleValues[randMod4];
         }
 
         private int GetDiceImage(int dieNumber, bool dark)
@@ -563,6 +848,8 @@ namespace MTGLifeCounter
             textView.Text = newValue.ToString();
             textView.SetTextColor(new Color(GetColor(newValue > 0 ? Resource.Color.light_font : Resource.Color.red_font)));
         }
+
+        #endregion View Management
     }
 }
 

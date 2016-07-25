@@ -11,7 +11,7 @@
         android:clipChildren="false">
         <RelativeLayout
             android:id="@+id/mv_OpponentLayout"
-            android:background="@drawable/waterbg"
+            android:background="@drawable/mountainbg"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
@@ -41,26 +41,22 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-                    <Button
+                    <ImageButton
                         android:id="@+id/mv_OpponentDecreaseHealth"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:background="@android:color/transparent"
                         android:layout_weight="1"
-                        android:gravity="center"
                         android:drawingCacheQuality="auto"
-                        android:drawableLeft="@drawable/minusbuttonlight"
-                        android:drawablePadding="20dp" />
-                    <Button
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/minusbuttonlight" />
+                    <ImageButton
                         android:id="@+id/mv_OpponentIncreaseHealth"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
                         android:drawingCacheQuality="auto"
                         android:background="@android:color/transparent"
-                        android:gravity="center"
-                        android:drawableRight="@drawable/plusbuttonlight"
-                        android:drawablePadding="20dp" />
+                        android:src="@drawable/plusbuttonlight" />
                 </LinearLayout>
             </RelativeLayout>
             <RelativeLayout
@@ -88,12 +84,81 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true" />
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/mv_OpponentSelectBgView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="#D0000000"
+                android:visibility="gone">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content">
+                        <ImageButton
+                            android:id="@+id/mv_OpponentSelectBgPln"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/plainsmanaunselected"
+                            android:layout_margin="5dp"
+                            android:background="@android:color/transparent"
+                            android:scaleType="fitCenter" />
+                        <ImageButton
+                            android:id="@+id/mv_OpponentSelectBgWtr"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/watermanaunselected"
+                            android:layout_margin="5dp"
+                            android:background="@android:color/transparent"
+                            android:scaleType="fitCenter" />
+                        <ImageButton
+                            android:id="@+id/mv_OpponentSelectBgSmp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/swampmanaunselected"
+                            android:layout_margin="5dp"
+                            android:background="@android:color/transparent"
+                            android:scaleType="fitCenter" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content">
+                        <ImageButton
+                            android:id="@+id/mv_OpponentSelectBgMtn"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/mountainmanaunselected"
+                            android:layout_margin="5dp"
+                            android:background="@android:color/transparent"
+                            android:scaleType="fitCenter" />
+                        <ImageButton
+                            android:id="@+id/mv_OpponentSelectBgFst"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/forestmanaunselected"
+                            android:layout_margin="5dp"
+                            android:background="@android:color/transparent"
+                            android:scaleType="fitCenter" />
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+          <Button android:id="@+id/mv_OpponentToggleSelectBg"
+                  android:layout_width="48dp"
+                  android:layout_height="48dp"
+                  android:layout_alignParentTop="true"
+                  android:layout_alignParentRight="true"
+                  android:text="BG" />
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/mv_PlayerLayout"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@drawable/plainsbg"
+            android:background="@drawable/waterbg"
             android:layout_weight="1"
             android:layout_alignParentBottom="true">
             <RelativeLayout
@@ -120,26 +185,22 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
-                    <Button
+                    <ImageButton
                         android:id="@+id/mv_PlayerDecreaseHealth"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:background="@android:color/transparent"
                         android:layout_weight="1"
-                        android:gravity="center"
                         android:drawingCacheQuality="auto"
-                        android:drawableLeft="@drawable/minusbuttonlight"
-                        android:drawablePadding="20dp" />
-                    <Button
+                        android:background="@android:color/transparent"
+                        android:src="@drawable/minusbuttonlight" />
+                    <ImageButton
                         android:id="@+id/mv_PlayerIncreaseHealth"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
                         android:drawingCacheQuality="auto"
                         android:background="@android:color/transparent"
-                        android:gravity="center"
-                        android:drawableRight="@drawable/plusbuttonlight"
-                        android:drawablePadding="20dp" />
+                        android:src="@drawable/minusbuttonlight" />
                 </LinearLayout>
             </RelativeLayout>
             <RelativeLayout
@@ -168,6 +229,75 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true" />
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/mv_PlayerSelectBgView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="#D0000000"
+                android:visibility="gone">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content">
+                        <ImageButton
+                            android:id="@+id/mv_PlayerSelectBgPln"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/plainsmanaunselected"
+                            android:layout_margin="5dp"
+                            android:background="@android:color/transparent"
+                            android:scaleType="fitCenter" />
+                        <ImageButton
+                            android:id="@+id/mv_PlayerSelectBgWtr"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/watermanaunselected"
+                            android:layout_margin="5dp"
+                            android:background="@android:color/transparent"
+                            android:scaleType="fitCenter" />
+                        <ImageButton
+                            android:id="@+id/mv_PlayerSelectBgSmp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/swampmanaunselected"
+                            android:layout_margin="5dp"
+                            android:background="@android:color/transparent"
+                            android:scaleType="fitCenter" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content">
+                        <ImageButton
+                            android:id="@+id/mv_PlayerSelectBgMtn"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/mountainmanaunselected"
+                            android:layout_margin="5dp"
+                            android:background="@android:color/transparent"
+                            android:scaleType="fitCenter" />
+                        <ImageButton
+                            android:id="@+id/mv_PlayerSelectBgFst"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/forestmanaunselected"
+                            android:layout_margin="5dp"
+                            android:background="@android:color/transparent"
+                            android:scaleType="fitCenter" />
+                    </LinearLayout>
+                </LinearLayout>
+            </RelativeLayout>
+          <Button android:id="@+id/mv_PlayerToggleSelectBg"
+                  android:layout_width="48dp"
+                  android:layout_height="48dp"
+                  android:layout_alignParentTop="true"
+                  android:layout_alignParentRight="true"
+                  android:text="BG" />
         </RelativeLayout>
     </LinearLayout>
     <FrameLayout
@@ -181,7 +311,7 @@
                 android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#00000080" />
+                android:background="@color/blackish" />
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"
@@ -192,25 +322,16 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:gravity="center">
-                <FrameLayout
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
+                <ImageButton
+                    android:id="@+id/mv_menuToggle"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
                     android:layout_alignParentTop="true"
                     android:layout_centerInParent="true"
-                    android:layout_centerHorizontal="true">
-                    <Button
-                        android:id="@+id/mv_menuToggle"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:background="@android:color/transparent" />
-                    <ImageView
-                        android:id="@+id/mv_menuToggleImg"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/mtg" />
-                </FrameLayout>
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/mtg"
+                    android:scaleType="fitCenter" />
                 <LinearLayout
                     android:orientation="horizontal"
                     android:id="@+id/mv_menu"
@@ -242,6 +363,32 @@
                         android:layout_height="64dp"
                         android:text="settings"
                         android:layout_weight="1" />
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:id="@+id/mv_lifeMenu"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:background="#323232">
+                    <Button
+                        android:id="@+id/mv_setLife20"
+                        android:layout_weight="1"
+                        android:text="20"
+                        android:layout_width="fill_parent"
+                        android:layout_height="64dp" />
+                    <Button
+                        android:id="@+id/mv_setLife30"
+                        android:layout_weight="1"
+                        android:text="30"
+                        android:layout_width="fill_parent"
+                        android:layout_height="64dp" />
+                    <Button
+                        android:id="@+id/mv_setLife40"
+                        android:layout_weight="1"
+                        android:text="40"
+                        android:layout_width="fill_parent"
+                        android:layout_height="64dp" />
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>

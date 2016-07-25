@@ -44,6 +44,9 @@ namespace MTGLifeCounter
 		public partial class Color
 		{
 			
+			// aapt resource value: 0x7f040005
+			public const int blackish = 2130968581;
+			
 			// aapt resource value: 0x7f040002
 			public const int grey_font = 2130968578;
 			
@@ -112,34 +115,64 @@ namespace MTGLifeCounter
 			public const int forestBg = 2130837516;
 			
 			// aapt resource value: 0x7f02000d
-			public const int Icon = 2130837517;
+			public const int forestMana = 2130837517;
 			
 			// aapt resource value: 0x7f02000e
-			public const int MinusButtonDark = 2130837518;
+			public const int forestManaUnselected = 2130837518;
 			
 			// aapt resource value: 0x7f02000f
-			public const int MinusButtonLight = 2130837519;
+			public const int Icon = 2130837519;
 			
 			// aapt resource value: 0x7f020010
-			public const int mountainBg = 2130837520;
+			public const int MinusButtonDark = 2130837520;
 			
 			// aapt resource value: 0x7f020011
-			public const int mtg = 2130837521;
+			public const int MinusButtonLight = 2130837521;
 			
 			// aapt resource value: 0x7f020012
-			public const int plainsBg = 2130837522;
+			public const int mountainBg = 2130837522;
 			
 			// aapt resource value: 0x7f020013
-			public const int PlusButtonDark = 2130837523;
+			public const int mountainMana = 2130837523;
 			
 			// aapt resource value: 0x7f020014
-			public const int PlusButtonLight = 2130837524;
+			public const int mountainManaUnselected = 2130837524;
 			
 			// aapt resource value: 0x7f020015
-			public const int swampBg = 2130837525;
+			public const int mtg = 2130837525;
 			
 			// aapt resource value: 0x7f020016
-			public const int waterBg = 2130837526;
+			public const int plainsBg = 2130837526;
+			
+			// aapt resource value: 0x7f020017
+			public const int plainsMana = 2130837527;
+			
+			// aapt resource value: 0x7f020018
+			public const int plainsManaUnselected = 2130837528;
+			
+			// aapt resource value: 0x7f020019
+			public const int PlusButtonDark = 2130837529;
+			
+			// aapt resource value: 0x7f02001a
+			public const int PlusButtonLight = 2130837530;
+			
+			// aapt resource value: 0x7f02001b
+			public const int swampBg = 2130837531;
+			
+			// aapt resource value: 0x7f02001c
+			public const int swampMana = 2130837532;
+			
+			// aapt resource value: 0x7f02001d
+			public const int swampManaUnselected = 2130837533;
+			
+			// aapt resource value: 0x7f02001e
+			public const int waterBg = 2130837534;
+			
+			// aapt resource value: 0x7f02001f
+			public const int waterMana = 2130837535;
+			
+			// aapt resource value: 0x7f020020
+			public const int waterManaUnselected = 2130837536;
 			
 			static Drawable()
 			{
@@ -178,56 +211,107 @@ namespace MTGLifeCounter
 			// aapt resource value: 0x7f060002
 			public const int mv_OpponentMainView = 2131099650;
 			
+			// aapt resource value: 0x7f06000e
+			public const int mv_OpponentSelectBgFst = 2131099662;
+			
+			// aapt resource value: 0x7f06000d
+			public const int mv_OpponentSelectBgMtn = 2131099661;
+			
+			// aapt resource value: 0x7f06000a
+			public const int mv_OpponentSelectBgPln = 2131099658;
+			
+			// aapt resource value: 0x7f06000c
+			public const int mv_OpponentSelectBgSmp = 2131099660;
+			
+			// aapt resource value: 0x7f060009
+			public const int mv_OpponentSelectBgView = 2131099657;
+			
+			// aapt resource value: 0x7f06000b
+			public const int mv_OpponentSelectBgWtr = 2131099659;
+			
+			// aapt resource value: 0x7f06000f
+			public const int mv_OpponentToggleSelectBg = 2131099663;
+			
 			// aapt resource value: 0x7f060007
 			public const int mv_OpponentWinsDiceRoll = 2131099655;
 			
-			// aapt resource value: 0x7f06000c
-			public const int mv_PlayerDecreaseHealth = 2131099660;
-			
-			// aapt resource value: 0x7f060010
-			public const int mv_PlayerDiceValue = 2131099664;
-			
-			// aapt resource value: 0x7f06000e
-			public const int mv_PlayerDiceView = 2131099662;
-			
-			// aapt resource value: 0x7f06000b
-			public const int mv_PlayerHealth = 2131099659;
-			
-			// aapt resource value: 0x7f06000d
-			public const int mv_PlayerIncreaseHealth = 2131099661;
-			
-			// aapt resource value: 0x7f060009
-			public const int mv_PlayerLayout = 2131099657;
-			
-			// aapt resource value: 0x7f06000a
-			public const int mv_PlayerMainView = 2131099658;
-			
-			// aapt resource value: 0x7f06000f
-			public const int mv_PlayerWinsDiceRoll = 2131099663;
-			
-			// aapt resource value: 0x7f060014
-			public const int mv_menu = 2131099668;
-			
-			// aapt resource value: 0x7f060011
-			public const int mv_menuClose = 2131099665;
-			
-			// aapt resource value: 0x7f060012
-			public const int mv_menuToggle = 2131099666;
-			
 			// aapt resource value: 0x7f060013
-			public const int mv_menuToggleImg = 2131099667;
-			
-			// aapt resource value: 0x7f060016
-			public const int mv_menu_dice = 2131099670;
+			public const int mv_PlayerDecreaseHealth = 2131099667;
 			
 			// aapt resource value: 0x7f060017
-			public const int mv_menu_life = 2131099671;
+			public const int mv_PlayerDiceValue = 2131099671;
 			
 			// aapt resource value: 0x7f060015
-			public const int mv_menu_reset = 2131099669;
+			public const int mv_PlayerDiceView = 2131099669;
+			
+			// aapt resource value: 0x7f060012
+			public const int mv_PlayerHealth = 2131099666;
+			
+			// aapt resource value: 0x7f060014
+			public const int mv_PlayerIncreaseHealth = 2131099668;
+			
+			// aapt resource value: 0x7f060010
+			public const int mv_PlayerLayout = 2131099664;
+			
+			// aapt resource value: 0x7f060011
+			public const int mv_PlayerMainView = 2131099665;
+			
+			// aapt resource value: 0x7f06001d
+			public const int mv_PlayerSelectBgFst = 2131099677;
+			
+			// aapt resource value: 0x7f06001c
+			public const int mv_PlayerSelectBgMtn = 2131099676;
+			
+			// aapt resource value: 0x7f060019
+			public const int mv_PlayerSelectBgPln = 2131099673;
+			
+			// aapt resource value: 0x7f06001b
+			public const int mv_PlayerSelectBgSmp = 2131099675;
 			
 			// aapt resource value: 0x7f060018
-			public const int mv_menu_settings = 2131099672;
+			public const int mv_PlayerSelectBgView = 2131099672;
+			
+			// aapt resource value: 0x7f06001a
+			public const int mv_PlayerSelectBgWtr = 2131099674;
+			
+			// aapt resource value: 0x7f06001e
+			public const int mv_PlayerToggleSelectBg = 2131099678;
+			
+			// aapt resource value: 0x7f060016
+			public const int mv_PlayerWinsDiceRoll = 2131099670;
+			
+			// aapt resource value: 0x7f060026
+			public const int mv_lifeMenu = 2131099686;
+			
+			// aapt resource value: 0x7f060021
+			public const int mv_menu = 2131099681;
+			
+			// aapt resource value: 0x7f06001f
+			public const int mv_menuClose = 2131099679;
+			
+			// aapt resource value: 0x7f060020
+			public const int mv_menuToggle = 2131099680;
+			
+			// aapt resource value: 0x7f060023
+			public const int mv_menu_dice = 2131099683;
+			
+			// aapt resource value: 0x7f060024
+			public const int mv_menu_life = 2131099684;
+			
+			// aapt resource value: 0x7f060022
+			public const int mv_menu_reset = 2131099682;
+			
+			// aapt resource value: 0x7f060025
+			public const int mv_menu_settings = 2131099685;
+			
+			// aapt resource value: 0x7f060027
+			public const int mv_setLife20 = 2131099687;
+			
+			// aapt resource value: 0x7f060028
+			public const int mv_setLife30 = 2131099688;
+			
+			// aapt resource value: 0x7f060029
+			public const int mv_setLife40 = 2131099689;
 			
 			static Id()
 			{
@@ -244,6 +328,9 @@ namespace MTGLifeCounter
 			
 			// aapt resource value: 0x7f030000
 			public const int Main = 2130903040;
+			
+			// aapt resource value: 0x7f030001
+			public const int Settings = 2130903041;
 			
 			static Layout()
 			{
