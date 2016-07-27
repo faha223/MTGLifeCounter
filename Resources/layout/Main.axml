@@ -147,12 +147,13 @@
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>
-          <Button android:id="@+id/mv_OpponentToggleSelectBg"
-                  android:layout_width="48dp"
-                  android:layout_height="48dp"
-                  android:layout_alignParentTop="true"
-                  android:layout_alignParentRight="true"
-                  android:text="BG" />
+            <Button
+                android:id="@+id/mv_OpponentToggleSelectBg"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:text="BG" />
         </RelativeLayout>
         <RelativeLayout
             android:id="@+id/mv_PlayerLayout"
@@ -200,7 +201,7 @@
                         android:layout_weight="1"
                         android:drawingCacheQuality="auto"
                         android:background="@android:color/transparent"
-                        android:src="@drawable/minusbuttonlight" />
+                        android:src="@drawable/plusbuttonlight" />
                 </LinearLayout>
             </RelativeLayout>
             <RelativeLayout
@@ -292,12 +293,13 @@
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>
-          <Button android:id="@+id/mv_PlayerToggleSelectBg"
-                  android:layout_width="48dp"
-                  android:layout_height="48dp"
-                  android:layout_alignParentTop="true"
-                  android:layout_alignParentRight="true"
-                  android:text="BG" />
+            <Button
+                android:id="@+id/mv_PlayerToggleSelectBg"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:text="BG" />
         </RelativeLayout>
     </LinearLayout>
     <FrameLayout

@@ -39,7 +39,7 @@ namespace MTGLifeCounter
             }
         }
 
-        private int playerBackground;
+        private int playerBackground = Resource.Drawable.plainsBg;
         public int PlayerBackground
         {
             get
@@ -48,16 +48,13 @@ namespace MTGLifeCounter
             }
             set
             {
-                if (playerBackground != value)
-                {
-                    playerBackground = value;
-                    OnPropertyChanged("PlayerBackground");
-                    OnPropertyChanged("PlayerDarkMode");
-                }
+                playerBackground = value;
+                OnPropertyChanged("PlayerBackground");
+                OnPropertyChanged("PlayerDarkMode");
             }
         }
 
-        private int opponentBackground;
+        private int opponentBackground = Resource.Drawable.swampBg;
         public int OpponentBackground
         {
             get
@@ -66,12 +63,9 @@ namespace MTGLifeCounter
             }
             set
             {
-                if (opponentBackground != value)
-                {
-                    opponentBackground = value;
-                    OnPropertyChanged("OpponentBackground");
-                    OnPropertyChanged("OpponentDarkMode");
-                }
+                opponentBackground = value;
+                OnPropertyChanged("OpponentBackground");
+                OnPropertyChanged("OpponentDarkMode");
             }
         }
 
@@ -358,8 +352,10 @@ namespace MTGLifeCounter
             // Hide nav buttons
             FindViewById(Resource.Id.mv_LayoutRoot).SystemUiVisibility = StatusBarVisibility.Hidden;
 
-            PlayerBackground = Resource.Drawable.plainsBg;
-            OpponentBackground = Resource.Drawable.swampBg;
+            //PlayerBackground = Resource.Drawable.plainsBg;
+            //OpponentBackground = Resource.Drawable.swampBg;
+
+            LoadState();
         }
 
         #region Main View Commands
@@ -568,10 +564,142 @@ namespace MTGLifeCounter
 
         #endregion
 
+        private void LoadState()
+        {
+            using (var preferences = GetSharedPreferences(SettingsKeys.FileName, FileCreationMode.Private))
+            {
+                if (preferences.Contains(SettingsKeys.BaseHealthKey))
+                    baseHealth = preferences.GetInt(SettingsKeys.BaseHealthKey, 20);
+
+                if (preferences.Contains(SettingsKeys.PlayerHealthKey))
+                    playerHealth = preferences.GetInt(SettingsKeys.PlayerHealthKey, BaseHealth);
+
+                if (preferences.Contains(SettingsKeys.OpponentHealthKey))
+                    opponentHealth = preferences.GetInt(SettingsKeys.OpponentHealthKey, BaseHealth);
+
+                if (preferences.Contains(SettingsKeys.PlayerBGKey))
+                {
+                    string BackgroundName = preferences.GetString(SettingsKeys.PlayerBGKey, "MTGLifeCounter.MTGLifeCounter:drawable/plainsbg");
+                    playerBackground = Resources.GetIdentifier(BackgroundName, "drawable", PackageName);
+                }
+
+                if (preferences.Contains(SettingsKeys.OpponentBGKey))
+                {
+                    string BackgroundName = preferences.GetString(SettingsKeys.OpponentBGKey, "MTGLifeCounter.MTGLifeCounter:drawable/swampbg");
+                    opponentBackground = Resources.GetIdentifier(BackgroundName, "drawable", PackageName);
+                }
+                OnPropertyChanged("State");
+            }
+        }
+
+        private void SaveState()
+        {
+            using (var preferences = GetSharedPreferences(SettingsKeys.FileName, FileCreationMode.Private))
+            {
+                using (var editor = preferences.Edit())
+                {
+                    editor.Clear();
+                    editor.PutInt(SettingsKeys.BaseHealthKey, BaseHealth);
+                    editor.PutInt(SettingsKeys.PlayerHealthKey, PlayerHealth);
+                    editor.PutInt(SettingsKeys.OpponentHealthKey, OpponentHealth);
+
+                    string playerBg = Resources.GetResourceName(PlayerBackground);
+                    editor.PutString(SettingsKeys.PlayerBGKey, playerBg);
+
+                    string opponentBg = Resources.GetResourceName(OpponentBackground);
+                    editor.PutString(SettingsKeys.OpponentBGKey, opponentBg);
+                    editor.Commit();
+                }
+            }
+        }
+
         private void OnPropertyChanged(string property)
         {
-            switch(property)
+            if(property != "State")
+                SaveState();
+            switch (property)
             {
+                case "State":
+                    RunOnUiThread(() =>
+                    {
+                        #region Health
+
+                        UpdateHealth(Resource.Id.mv_PlayerHealth, PlayerHealth);
+                        UpdateHealth(Resource.Id.mv_OpponentHealth, OpponentHealth);
+
+                        #endregion Health
+
+                        #region Player Background
+
+                        FindViewById(Resource.Id.mv_PlayerLayout).SetBackgroundResource(PlayerBackground);
+                        FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgSmp).SetImageResource(Resource.Drawable.swampManaUnselected);
+                        FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgWtr).SetImageResource(Resource.Drawable.waterManaUnselected);
+                        FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgPln).SetImageResource(Resource.Drawable.plainsManaUnselected);
+                        FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgFst).SetImageResource(Resource.Drawable.forestManaUnselected);
+                        FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgMtn).SetImageResource(Resource.Drawable.mountainManaUnselected);
+                        switch (PlayerBackground)
+                        {
+                            case Resource.Drawable.swampBg:
+                                FindViewById<ImageButton>(Resource.Id.mv_PlayerSelectBgSmp).SetImageResource(Resource.Drawable.swampMana);
+                                break;
+                            case Resource.Drawable.waterBg:
+                                FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgWtr).SetImageResource(Resource.Drawable.waterMana);
+                                break;
+                            case Resource.Drawable.mountainBg:
+                                FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgMtn).SetImageResource(Resource.Drawable.mountainMana);
+                                break;
+                            case Resource.Drawable.plainsBg:
+                                FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgPln).SetImageResource(Resource.Drawable.plainsMana);
+                                break;
+                            case Resource.Drawable.forestBg:
+                                FindViewById<ImageView>(Resource.Id.mv_PlayerSelectBgFst).SetImageResource(Resource.Drawable.forestMana);
+                                break;
+                        }
+
+                        #endregion Player Background
+
+                        #region Opponent Background
+
+                        FindViewById(Resource.Id.mv_OpponentLayout).SetBackgroundResource(OpponentBackground);
+                        FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgSmp).SetImageResource(Resource.Drawable.swampManaUnselected);
+                        FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgWtr).SetImageResource(Resource.Drawable.waterManaUnselected);
+                        FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgPln).SetImageResource(Resource.Drawable.plainsManaUnselected);
+                        FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgFst).SetImageResource(Resource.Drawable.forestManaUnselected);
+                        FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgMtn).SetImageResource(Resource.Drawable.mountainManaUnselected);
+                        switch (OpponentBackground)
+                        {
+                            case Resource.Drawable.swampBg:
+                                FindViewById<ImageButton>(Resource.Id.mv_OpponentSelectBgSmp).SetImageResource(Resource.Drawable.swampMana);
+                                break;
+                            case Resource.Drawable.waterBg:
+                                FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgWtr).SetImageResource(Resource.Drawable.waterMana);
+                                break;
+                            case Resource.Drawable.mountainBg:
+                                FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgMtn).SetImageResource(Resource.Drawable.mountainMana);
+                                break;
+                            case Resource.Drawable.plainsBg:
+                                FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgPln).SetImageResource(Resource.Drawable.plainsMana);
+                                break;
+                            case Resource.Drawable.forestBg:
+                                FindViewById<ImageView>(Resource.Id.mv_OpponentSelectBgFst).SetImageResource(Resource.Drawable.forestMana);
+                                break;
+                        }
+
+                        #endregion Opponent Background
+
+                        #region Dark Mode
+
+                        SetDieImage(Resource.Id.mv_PlayerDiceValue, PlayerDie, PlayerDarkMode);
+                        FindViewById<ImageButton>(Resource.Id.mv_PlayerDecreaseHealth).SetImageResource(PlayerDarkMode ? Resource.Drawable.MinusButtonDark : Resource.Drawable.MinusButtonLight);
+                        FindViewById<ImageButton>(Resource.Id.mv_PlayerIncreaseHealth).SetImageResource(PlayerDarkMode ? Resource.Drawable.PlusButtonDark : Resource.Drawable.PlusButtonLight);
+
+                        SetDieImage(Resource.Id.mv_OpponentDiceValue, OpponentDie, OpponentDarkMode);
+                        FindViewById<ImageButton>(Resource.Id.mv_OpponentDecreaseHealth).SetImageResource(OpponentDarkMode ? Resource.Drawable.MinusButtonDark : Resource.Drawable.MinusButtonLight);
+                        FindViewById<ImageButton>(Resource.Id.mv_OpponentIncreaseHealth).SetImageResource(OpponentDarkMode ? Resource.Drawable.PlusButtonDark : Resource.Drawable.PlusButtonLight);
+
+                        #endregion Dark Mode
+                    });
+                    break;
                 case "PlayerHealth":
                     RunOnUiThread(() =>
                     {
